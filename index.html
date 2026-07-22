@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disney API + Firebase</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>✨ Favoritos da Turma - Disney</h1>
+
+    <div class="search-box">
+      <input type="text" id="user-name" placeholder="Seu nome (Opcional)">
+      <input type="text" id="search-input" placeholder="Digite o nome (ex: Elsa, Mickey)">
+      <button id="search-btn">Buscar</button>
+    </div>
+
+    <div id="character-card" class="card hidden">
+      <img id="char-img" src="" alt="Foto do Personagem">
+      <h3 id="char-name"></h3>
+      <strong>Aparições / Filmes:</strong>
+      <ul id="char-films"></ul>
+      <button id="favorite-btn" class="btn-favorite">⭐ Favoritar</button>
+    </div>
+
+    <hr>
+
+    <h2>🌟 Favoritos Salvos</h2>
+    <div id="favorites-grid" class="favorites-grid"></div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
