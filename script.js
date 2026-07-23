@@ -6,9 +6,7 @@ import {
   onSnapshot, 
   deleteDoc, 
   doc, 
-  serverTimestamp, 
-  query, 
-  orderBy 
+  serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 // Configuração do Firebase
@@ -37,34 +35,68 @@ const charFilms = document.getElementById('char-films');
 const favoriteBtn = document.getElementById('favorite-btn');
 const favoritesGrid = document.getElementById('favorites-grid');
 
-// Estado local
 let currentCharacter = null;
 
 // -------------------------------------------------------------
-// Dicionário de Tradução (PT-BR -> EN)
-// Mapeia termos comuns em português para a busca na Disney API
+// Dicionário Ampliado de Tradução (PT-BR -> EN)
 // -------------------------------------------------------------
 const nameTranslations = {
+  // Clássicos Disney
+  "mickey": "mickey mouse",
+  "minnie": "minnie mouse",
+  "pato donald": "donald duck",
+  "pateta": "goofy",
+  "margarida": "daisy duck",
+  "tio patinhas": "scrooge mcduck",
+  "pluto": "pluto",
+  
+  // Princesas e Heróis Clássicos
   "branca de neve": "snow white",
   "cinderela": "cinderella",
   "bela adormecida": "sleeping beauty",
   "aurora": "aurora",
   "pequena sereia": "ariel",
+  "ariel": "ariel",
   "bela": "belle",
   "fera": "beast",
-  "pato donald": "donald duck",
-  "pateta": "goofy",
-  "margarida": "daisy duck",
-  "tio patinhas": "scrooge mcduck",
-  "chapeuzinho vermelho": "little red riding hood",
-  "urso pooh": "winnie the pooh",
-  "pooh": "winnie the pooh",
+  "aladdin": "aladdin",
+  "genio": "genie",
+  "gênio": "genie",
+  "jasmin": "jasmine",
+  "jasmim": "jasmine",
+  "mulan": "mulan",
+  "pocahontas": "pocahontas",
+  "tarzan": "tarzan",
+  "hercules": "hercules",
+  "hércules": "hercules",
+  "pinoquio": "pinocchio",
+  "pinóquio": "pinocchio",
+  "peter pan": "peter pan",
   "sininho": "tinker bell",
   "tinkerbell": "tinker bell",
   "capitao gancho": "captain hook",
   "capitão gancho": "captain hook",
-  "pinoquio": "pinocchio",
-  "pinóquio": "pinocchio",
+  "chapeuzinho vermelho": "little red riding hood",
+  
+  // O Rei Leão & Filmes Animados
+  "rei leao": "simba",
+  "rei leão": "simba",
+  "simba": "simba",
+  "mufasa": "mufasa",
+  "scar": "scar",
+  "timão": "timon",
+  "timao": "timon",
+  "pumba": "pumbaa",
+  "stitch": "stitch",
+  "lilo": "lilo",
+  "urso pooh": "winnie the pooh",
+  "pooh": "winnie the pooh",
+  "tigrão": "tigger",
+  "tigrao": "tigger",
+  "bambi": "bambi",
+  "dumbo": "dumbo",
+  "corcunda de notre dame": "quasimodo",
+  "quasimodo": "quasimodo",
   "gatão": "cheshire cat",
   "gato de cheshire": "cheshire cat",
   "coelho branco": "white rabbit",
@@ -72,19 +104,47 @@ const nameTranslations = {
   "rainha de copas": "queen of hearts",
   "cruela": "cruella de vil",
   "cruella": "cruella de vil",
-  "rei leao": "simba",
-  "rei leão": "simba",
-  "mufasa": "mufasa",
-  "scar": "scar",
-  "corcunda de notre dame": "quasimodo",
+  "malévola": "maleficent",
+  "malevola": "maleficent",
+
+  // Animações Modernas & Pixar
+  "elsa": "elsa",
+  "anna": "anna",
+  "olaf": "olaf",
+  "frozen": "elsa",
   "enrolados": "rapunzel",
+  "rapunzel": "rapunzel",
+  "flynn rider": "flynn rider",
+  "moana": "moana",
+  "maui": "maui",
   "valente": "merida",
+  "merida": "merida",
+  "detona ralph": "wreck-it ralph",
+  "ralph": "wreck-it ralph",
+  "vanellope": "vanellope",
+  "baymax": "baymax",
+  "judy hopps": "judy hopps",
+  "nick wilde": "nick wilde",
+  "zootopia": "judy hopps",
+  "rayo mcqueen": "lightning mcqueen",
+  "relampago mcqueen": "lightning mcqueen",
+  "relâmpago mcqueen": "lightning mcqueen",
+  "woody": "woody",
+  "buzz": "buzz lightyear",
+  "buzz lightyear": "buzz lightyear",
+  "wall-e": "wall-e",
+  "walle": "wall-e",
+  "ratatouille": "remy",
+  "remy": "remy",
+
+  // Marvel / Outros incorporados na API
   "homem de ferro": "iron man",
   "capitao america": "captain america",
-  "capitão américa": "captain america"
+  "capitão américa": "captain america",
+  "thor": "thor",
+  "homem aranha": "spider-man"
 };
 
-// Função para normalizar texto (remove acentos e caixa alta/baixa)
 function normalizeText(text) {
   return text
     ? text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim()
@@ -99,8 +159,6 @@ async function searchCharacter() {
   if (!rawInput) return alert("Digite o nome de um personagem!");
 
   const normalizedInput = normalizeText(rawInput);
-
-  // Traduz para o inglês se existir no dicionário, senão usa o texto digitado
   const searchTermEN = nameTranslations[normalizedInput] || rawInput;
 
   try {
@@ -120,24 +178,19 @@ async function searchCharacter() {
       return;
     }
 
-    // Algoritmo de seleção do melhor resultado
     const searchTarget = normalizeText(searchTermEN);
-
     let bestMatch = results.find(item => normalizeText(item.name) === searchTarget && item.imageUrl);
 
     if (!bestMatch) {
       bestMatch = results.find(item => normalizeText(item.name).includes(searchTarget) && item.imageUrl);
     }
-
     if (!bestMatch) {
       bestMatch = results.find(item => item.imageUrl);
     }
-
     if (!bestMatch) {
       bestMatch = results[0];
     }
 
-    // Monta o objeto local
     currentCharacter = {
       name: bestMatch.name,
       imageUrl: bestMatch.imageUrl || "https://via.placeholder.com/200x250?text=Sem+Foto",
@@ -148,7 +201,6 @@ async function searchCharacter() {
       ]
     };
 
-    // Atualiza a DOM
     charImg.src = currentCharacter.imageUrl;
     charName.textContent = currentCharacter.name;
     charFilms.innerHTML = "";
@@ -211,18 +263,16 @@ async function removeFavorite(id) {
 }
 
 // -------------------------------------------------------------
-// Sincronização em Tempo Real (Sem exigir índices no Firestore)
+// Sincronização em Tempo Real
 // -------------------------------------------------------------
 onSnapshot(favoritesRef, (snapshot) => {
   favoritesGrid.innerHTML = "";
 
-  // Converte para array e ordena via JavaScript no navegador
   const docs = [];
   snapshot.forEach((docSnapshot) => {
     docs.push({ id: docSnapshot.id, ...docSnapshot.data() });
   });
 
-  // Ordena por data de criação (mais recente primeiro)
   docs.sort((a, b) => {
     const timeA = a.createdAt ? a.createdAt.toMillis() : Date.now();
     const timeB = b.createdAt ? b.createdAt.toMillis() : Date.now();
@@ -241,7 +291,29 @@ onSnapshot(favoritesRef, (snapshot) => {
     `;
 
     card.querySelector('.btn-delete').addEventListener('click', () => removeFavorite(item.id));
-
     favoritesGrid.appendChild(card);
   });
+});
+
+// -------------------------------------------------------------
+// Efeito 3D Parallax Tilt no Card Principal
+// -------------------------------------------------------------
+const cardElement = document.getElementById('character-card');
+
+cardElement.addEventListener('mousemove', (e) => {
+  const rect = cardElement.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
+  
+  const rotateX = ((y - centerY) / centerY) * -15;
+  const rotateY = ((x - centerX) / centerX) * 15;
+  
+  cardElement.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+});
+
+cardElement.addEventListener('mouseleave', () => {
+  cardElement.style.transform = `rotateX(0deg) rotateY(0deg)`;
 });
