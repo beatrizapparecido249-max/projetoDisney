@@ -1,34 +1,120 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Disney API + Firebase</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disney API + Firebase</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-    <h1>✨ Favoritos da Turma - Disney</h1>
+<div id="intro-overlay">
+<div class="intro-content">
+<div class="disney-arc"></div>
+<h1 class="disney-title">Disney</h1>
+<p class="intro-subtitle">A Magia Começa Aqui ✨</p>
+</div>
+</div>
 
-    <div class="search-box">
-      <input type="text" id="user-name" placeholder="Seu nome (Opcional)">
-      <input type="text" id="search-input" placeholder="Digite o nome (ex: Elsa, Mickey)">
-      <button id="search-btn">Buscar</button>
+  <div id="crying-overlay" class="crying-overlay hidden"></div>
+
+  <div class="main-wrapper">
+    
+    <aside class="quiz-sidebar">
+      <div class="quiz-card">
+        <h3>🧩 Disney Quiz</h3>
+        <div id="quiz-container">
+          <p id="quiz-progress" class="quiz-progress">Pergunta 1 de 15</p>
+          <p id="quiz-question" class="quiz-question">Carregando pergunta...</p>
+          <div id="quiz-options" class="quiz-options"></div>
+        </div>
+        <div id="quiz-result" class="quiz-result hidden">
+          <h4>Fim do Quiz! 🎉</h4>
+          <p id="quiz-score"></p>
+          <button id="restart-quiz-btn" class="btn-quiz-restart">Jogar Novamente 🔄</button>
+        </div>
+      </div>
+    </aside>
+<aside class="quiz-sidebar">
+  <div class="quiz-card">
+    <h3>🧩 Disney Quiz</h3>
+    
+    <div style="text-align: center; margin-bottom: 12px;">
+      <label for="quiz-level-select" style="font-size: 0.85rem; color: #ffdf00; font-weight: bold;">Dificuldade: </label>
+      <select id="quiz-level-select" style="background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #00d2ff; padding: 4px 8px; border-radius: 8px; cursor: pointer;">
+        <option value="facil">🟢 Fácil</option>
+        <option value="medio">🟡 Médio</option>
+        <option value="dificil">🔴 Difícil</option>
+      </select>
     </div>
 
-    <div id="character-card" class="card hidden">
-      <img id="char-img" src="" alt="Foto do Personagem">
-      <h3 id="char-name"></h3>
-      <strong>Aparições / Filmes:</strong>
-      <ul id="char-films"></ul>
-      <button id="favorite-btn" class="btn-favorite">⭐ Favoritar</button>
+    <div id="quiz-container">
+      <p id="quiz-progress" class="quiz-progress">Pergunta 1 de 15</p>
+      <p id="quiz-question" class="quiz-question">Carregando pergunta...</p>
+      <div id="quiz-options" class="quiz-options"></div>
     </div>
 
-    <hr>
+    <div id="quiz-result" class="quiz-result hidden">
+      <h4>Fim do Quiz! 🎉</h4>
+      <p id="quiz-score"></p>
+      <button id="restart-quiz-btn" class="btn-quiz-restart">Jogar Novamente 🔄</button>
+    </div>
+  </div>
+</aside>
+    <div class="container">
+      <h1>✨ Favoritos da Turma - Disney</h1>
 
-    <h2>🌟 Favoritos Salvos</h2>
-    <div id="favorites-grid" class="favorites-grid"></div>
+      <div class="search-box">
+        <input type="text" id="user-name" placeholder="Seu nome (Opcional)">
+        <input type="text" id="search-input" placeholder="Digite o nome (ex: Elsa, Mickey)">
+        <button id="search-btn">Buscar</button>
+      </div>
+
+      <div id="character-card" class="card hidden">
+        <div class="card-media">
+          <img id="char-img" src="" alt="Foto do Personagem">
+        </div>
+        
+        <div class="card-info">
+          <h3 id="char-name"></h3>
+          
+          <strong>📖 Resumo:</strong>
+          <p id="char-summary" class="char-summary"></p>
+
+          <strong>🎬 Aparições / Filmes:</strong>
+          <ul id="char-films"></ul>
+
+          <button id="favorite-btn" class="btn-favorite">⭐ Favoritar</button>
+        </div>
+      </div>
+
+      <hr>
+
+      <h2>🌟 Favoritos Salvos</h2>
+      <div id="favorites-grid" class="favorites-grid"></div>
+    </div>
+
+    <aside class="sidebar">
+      
+      <div class="info-card">
+        <h3>🏰 História da Disney</h3>
+        <p>Fundada em 16 de outubro de 1923 por Walt Disney e Roy O. Disney como <i>Disney Brothers Cartoon Studio</i>, a empresa revolucionou a animação mundial com o lançamento de Mickey Mouse em 1928 e o primeiro longa-metragem animado, <i>Branca de Neve</i>, em 1937.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>❄️ Maior Sucesso</h3>
+        <p><b>O Rei Leão (1994)</b> é o maior sucesso da animação 2D tradicional. Já na era modernizada e 3D, <b>Frozen II (2019)</b> se tornou a animação de maior bilheteria da história do estúdio, arrecadando mais de US$ 1,45 bilhão mundialmente!</p>
+      </div>
+
+      <div class="info-card">
+        <h3>🎂 Idade da Disney</h3>
+        <p>A The Walt Disney Company celebrou seu centenário oficial em outubro de 2023. Hoje, a Disney conta com mais de <b>100 anos</b> de magia, inovação e entretenimento espalhados pelo mundo todo.</p>
+      </div>
+
+    </aside>
+
   </div>
 
   <script type="module" src="script.js"></script>

@@ -5,106 +5,176 @@
 }
 
 body { 
-  /* Camadas do fundo (de cima para baixo):
-    1. Brilhos e estrelas mágicas
-    2. Silhueta do Mickey no canto direito
-    3. Silhueta do Castelo no canto esquerdo
-    4. Gradiente escuro para manter a leitura agradável
-  */
   background-image: 
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.15) 2px, transparent 2px),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.2) 3px, transparent 3px),
-    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.15) 2px, transparent 2px),
-    url('https://www.svgrepo.com/show/305541/mickey-mouse.svg'),
-    url('https://www.svgrepo.com/show/364234/castle.svg'),
-    radial-gradient(circle at center, #1a2a6c, #0d1b2a, #000814);
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.2) 2px, transparent 2px),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.25) 3px, transparent 3px),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.2) 2px, transparent 2px),
+    url('https://images.wallpapersden.com/image/download/disney-castle-art_bW1pa26UmZqaraWkpJRmZmdlrWZnZWU.jpg'),
+    radial-gradient(circle at center, rgba(26, 42, 108, 0.75), rgba(13, 27, 42, 0.85), rgba(0, 8, 20, 0.95));
 
-  background-position: 
-    0 0, 
-    0 0, 
-    0 0, 
-    right 5% bottom 5%, 
-    left 5% bottom 5%, 
-    center;
-
-  background-size: 
-    100px 100px, 
-    150px 150px, 
-    120px 120px, 
-    180px, 
-    220px, 
-    200% 200%;
-
-  background-repeat: 
-    repeat, 
-    repeat, 
-    repeat, 
-    no-repeat, 
-    no-repeat, 
-    no-repeat;
-
-  /* Opacidade e mistura suave dos elementos gráficos */
-  background-blend-mode: normal, normal, normal, overlay, overlay, normal;
+  background-position: 0 0, 0 0, 0 0, center center, center;
+  background-size: 100px 100px, 150px 150px, 120px 120px, cover, cover;
+  background-repeat: repeat, repeat, repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+  background-blend-mode: normal, normal, normal, overlay, normal;
   
-  animation: bgPulse 12s ease infinite;
   margin: 0; 
   padding: 40px 20px; 
   color: #fff; 
   min-height: 100vh;
   perspective: 1000px;
+  overflow-x: hidden;
 }
 
-/* Container Principal com Efeito Glassmorphism 3D */
+/* ========================================================= */
+/* 🏰 TELA DE ABERTURA MÁGICA ULTRACOLORIDA (DISNEY INTRO) */
+/* ========================================================= */
+#intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #1a0b2e 0%, #080312 70%, #000000 100%);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  overflow: hidden;
+  transition: opacity 1s ease-in-out;
+}
+
+#intro-overlay::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle at 30% 40%, rgba(255, 0, 128, 0.35) 0%, transparent 40%),
+              radial-gradient(circle at 70% 60%, rgba(0, 212, 255, 0.35) 0%, transparent 40%),
+              radial-gradient(circle at 50% 30%, rgba(255, 215, 0, 0.25) 0%, transparent 50%);
+  animation: bgGlowPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes bgGlowPulse {
+  0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+  100% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+}
+
+#intro-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-content {
+  position: relative;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.disney-arc {
+  width: 380px;
+  height: 190px;
+  border: 6px solid transparent;
+  border-top: 6px solid #ff0080;
+  border-image: linear-gradient(to right, #00f2fe, #ff0080, #ffdf00) 1;
+  border-radius: 380px 380px 0 0;
+  position: absolute;
+  top: -70px;
+  filter: drop-shadow(0 0 20px #ff0080) drop-shadow(0 0 35px #00f2fe);
+  animation: drawArc 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  opacity: 0;
+}
+
+@keyframes drawArc {
+  0% { clip-path: inset(0 100% 0 0); opacity: 0; transform: scale(0.7); }
+  20% { opacity: 1; }
+  100% { clip-path: inset(0 0 0 0); opacity: 1; transform: scale(1); }
+}
+
+.disney-title {
+  font-family: 'Cinzel Decorative', cursive, serif;
+  font-size: 6.5rem;
+  margin: 0;
+  padding: 0 20px;
+  background: linear-gradient(90deg, #ff0080, #ff8c00, #ffdf00, #00f2fe, #9d4edd, #ff0080);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbowText 3s linear infinite, titleZoom 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  filter: drop-shadow(0 0 25px rgba(255, 0, 128, 0.8)) drop-shadow(0 0 45px rgba(0, 242, 254, 0.6));
+}
+
+.intro-subtitle {
+  font-size: 1.3rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ffdf00, #00f2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 20px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeInSubtitle 1s ease forwards 1.4s;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
+}
+
+@keyframes rainbowText {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+@keyframes titleZoom {
+  0% { transform: scale(0.3); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeInSubtitle { to { opacity: 1; } }
+
+/* ========================================================= */
+/* CONTAINER PRINCIPAL E LAYOUT */
+/* ========================================================= */
+.main-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 25px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 .container { 
-  max-width: 900px; 
-  margin: 0 auto; 
+  flex: 1;
+  max-width: 750px; 
+  margin: 0; 
   background: rgba(255, 255, 255, 0.07);
   padding: 35px;
   border-radius: 24px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6),
-              inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   transform-style: preserve-3d;
 }
 
-/* 🌟 EFEITO MÁGICO NO TÍTULO PRINCIPAL (H1) */
 h1 { 
   text-align: center; 
   font-size: 2.8rem;
   margin-bottom: 25px;
   font-weight: 800;
   letter-spacing: 1px;
-  
-  /* Gradiente com movimento dinâmico */
-  background: linear-gradient(
-    90deg, 
-    #ff007f, 
-    #7928ca, 
-    #00d2ff, 
-    #00f2fe, 
-    #ff007f
-  );
+  background: linear-gradient(90deg, #ff007f, #7928ca, #00d2ff, #00f2fe, #ff007f);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  
-  /* Animações combinadas de cores e flutuação */
   animation: magicTitle 6s linear infinite, titleFloat 3s ease-in-out infinite alternate;
-  
-  /* Sombra brilhante */
   filter: drop-shadow(0px 6px 15px rgba(0, 210, 255, 0.4));
 }
 
-@keyframes magicTitle {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
-}
-
-@keyframes titleFloat {
-  0% { transform: translateY(0px) rotate(-1deg); }
-  100% { transform: translateY(-8px) rotate(1deg); }
-}
+@keyframes magicTitle { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+@keyframes titleFloat { 0% { transform: translateY(0px) rotate(-1deg); } 100% { transform: translateY(-8px) rotate(1deg); } }
 
 h2 { 
   text-align: center; 
@@ -123,7 +193,6 @@ hr {
   margin: 40px 0;
 }
 
-/* Área de Busca */
 .search-box { 
   display: flex; 
   gap: 12px; 
@@ -135,8 +204,8 @@ hr {
 .search-box input { 
   padding: 14px 20px; 
   width: 38%; 
-  min-width: 200px;
-  font-size: 16px; 
+  min-width: 180px;
+  font-size: 15px; 
   background: rgba(0, 0, 0, 0.4);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.2); 
@@ -147,14 +216,12 @@ hr {
 }
 
 .search-box input::placeholder { color: #aaa; }
-
 .search-box input:focus {
   border-color: #00d2ff;
   box-shadow: 0 0 15px rgba(0, 210, 255, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.5);
   transform: scale(1.02);
 }
 
-/* 🧊 Botão Buscar 3D */
 .search-box button { 
   padding: 14px 28px; 
   font-size: 16px; 
@@ -164,174 +231,174 @@ hr {
   color: white; 
   border-radius: 12px; 
   cursor: pointer; 
-  position: relative;
   box-shadow: 0 6px 0 #003d80, 0 12px 20px rgba(0, 0, 0, 0.4);
   transition: all 0.15s ease;
 }
 
-.search-box button:hover { 
-  transform: translateY(-2px);
-  box-shadow: 0 8px 0 #003d80, 0 15px 25px rgba(0, 210, 255, 0.4);
-}
+.search-box button:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #003d80, 0 15px 25px rgba(0, 210, 255, 0.4); }
+.search-box button:active { transform: translateY(4px); box-shadow: 0 2px 0 #003d80, 0 5px 10px rgba(0, 0, 0, 0.4); }
 
-.search-box button:active { 
-  transform: translateY(4px);
-  box-shadow: 0 2px 0 #003d80, 0 5px 10px rgba(0, 0, 0, 0.4);
-}
-
-/* 🃏 Card Principal 3D */
 .card { 
   background: rgba(255, 255, 255, 0.95); 
   color: #222;
   border-radius: 20px; 
   padding: 25px; 
-  max-width: 380px; 
+  max-width: 680px; 
   margin: 0 auto 30px auto; 
-  text-align: center; 
+  display: flex;
+  gap: 25px;
+  align-items: center;
   box-shadow: 0 20px 40px rgba(0,0,0,0.5);
   transform-style: preserve-3d;
   transition: transform 0.1s ease-out, box-shadow 0.3s ease;
   will-change: transform;
 }
 
-.card img { 
-  width: 100%; 
-  height: 250px; 
-  border-radius: 14px; 
-  object-fit: cover; 
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-  transform: translateZ(30px);
-  transition: transform 0.3s ease;
-}
+.card-media { flex: 1; min-width: 220px; }
+.card img { width: 100%; height: 280px; border-radius: 14px; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transform: translateZ(30px); }
+.card-info { flex: 1.4; text-align: left; }
+.card h3 { margin: 0 0 12px 0; font-size: 1.8rem; color: #111; transform: translateZ(20px); }
+.card strong { color: #444; display: block; margin-top: 10px; margin-bottom: 5px; font-size: 14px; transform: translateZ(15px); }
 
-.card h3 { 
-  margin: 20px 0 10px 0; 
-  font-size: 1.6rem;
-  color: #111;
-  transform: translateZ(20px);
-}
-
-.card strong {
-  color: #555;
-  display: block;
-  margin-bottom: 8px;
-  transform: translateZ(15px);
+.char-summary {
+  font-size: 13px; line-height: 1.4; color: #333; background: #eef2f7; padding: 10px 12px; border-radius: 8px; margin: 0 0 10px 0; border-left: 3px solid #00d2ff;
 }
 
 .card ul { 
-  text-align: left; 
-  padding: 12px 15px 12px 35px; 
-  font-size: 14px; 
-  max-height: 100px; 
-  overflow-y: auto; 
-  background: #f0f3f8;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  transform: translateZ(10px);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  text-align: left; padding: 8px 12px 8px 28px; font-size: 13px; max-height: 85px; overflow-y: auto; background: #f0f3f8; border-radius: 10px; margin-bottom: 15px; transform: translateZ(10px); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* ⭐ Botão Favoritar 3D */
 .btn-favorite { 
-  background: linear-gradient(180deg, #ffe066 0%, #f59e0b 100%); 
-  color: #4a2c00;
-  border: none; 
-  padding: 14px 28px; 
-  font-size: 16px; 
-  border-radius: 50px; 
-  cursor: pointer; 
-  font-weight: bold; 
-  transform: translateZ(25px);
-  box-shadow: 0 5px 0 #b45309, 0 10px 20px rgba(245, 158, 11, 0.4);
-  transition: all 0.15s ease;
+  background: linear-gradient(180deg, #ffe066 0%, #f59e0b 100%); color: #4a2c00; border: none; padding: 14px 28px; font-size: 16px; border-radius: 50px; cursor: pointer; font-weight: bold; transform: translateZ(25px); box-shadow: 0 5px 0 #b45309, 0 10px 20px rgba(245, 158, 11, 0.4); transition: all 0.15s ease;
 }
-
-.btn-favorite:hover { 
-  transform: translateZ(35px) scale(1.05);
-  box-shadow: 0 7px 0 #b45309, 0 12px 25px rgba(245, 158, 11, 0.6);
-}
-
-.btn-favorite:active {
-  transform: translateZ(10px) translateY(4px);
-  box-shadow: 0 1px 0 #b45309, 0 5px 10px rgba(0,0,0,0.2);
-}
+.btn-favorite:hover { transform: translateZ(35px) scale(1.05); box-shadow: 0 7px 0 #b45309, 0 12px 25px rgba(245, 158, 11, 0.6); }
+.btn-favorite:active { transform: translateZ(10px) translateY(4px); box-shadow: 0 1px 0 #b45309, 0 5px 10px rgba(0,0,0,0.2); }
 
 .hidden { display: none !important; }
 
-/* Grid de Favoritos */
-.favorites-grid { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
-  gap: 20px; 
-  padding: 10px 0; 
-  perspective: 800px;
-}
+.favorites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; padding: 10px 0; perspective: 800px; }
 
-/* Cards de Favoritos 3D */
 .fav-card { 
-  background: rgba(255, 255, 255, 0.95); 
-  color: #222;
-  border-radius: 16px; 
-  padding: 12px; 
-  text-align: center; 
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); 
-  position: relative; 
-  transform-style: preserve-3d;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-  animation: cardAppear 0.5s ease-out forwards;
+  background: rgba(255, 255, 255, 0.95); color: #222; border-radius: 16px; padding: 12px; text-align: center; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); position: relative; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease; animation: cardAppear 0.5s ease-out forwards;
 }
 
-@keyframes cardAppear {
-  from { opacity: 0; transform: scale(0.5) rotateX(-30deg); }
-  to { opacity: 1; transform: scale(1) rotateX(0deg); }
-}
+@keyframes cardAppear { from { opacity: 0; transform: scale(0.5) rotateX(-30deg); } to { opacity: 1; transform: scale(1) rotateX(0deg); } }
 
-.fav-card:hover {
-  transform: translateY(-10px) rotateY(10deg) rotateX(5deg) scale(1.03);
-  box-shadow: -10px 20px 30px rgba(0, 210, 255, 0.25), 0 15px 25px rgba(0,0,0,0.5);
-}
+.fav-card:hover { transform: translateY(-10px) rotateY(10deg) rotateX(5deg) scale(1.03); box-shadow: -10px 20px 30px rgba(0, 210, 255, 0.25), 0 15px 25px rgba(0,0,0,0.5); }
+.fav-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.fav-card p { margin: 10px 0 2px 0; font-weight: bold; font-size: 15px; }
+.fav-card small { color: #666; font-size: 12px; display: block; margin-bottom: 10px; }
 
-.fav-card img { 
-  width: 100%; 
-  height: 140px; 
-  object-fit: cover; 
-  border-radius: 10px; 
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.fav-card p { 
-  margin: 10px 0 2px 0; 
-  font-weight: bold; 
-  font-size: 15px; 
-}
-
-.fav-card small { 
-  color: #666; 
-  font-size: 12px; 
-  display: block;
-  margin-bottom: 10px;
-}
-
-/* Botão Excluir 3D */
 .btn-delete { 
-  background: linear-gradient(180deg, #ff6b6b 0%, #dc2626 100%); 
-  color: white; 
-  border: none; 
-  border-radius: 8px; 
-  padding: 8px 14px; 
-  cursor: pointer; 
-  font-size: 12px; 
+  background: linear-gradient(180deg, #ff6b6b 0%, #dc2626 100%); color: white; border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; box-shadow: 0 3px 0 #991b1b; transition: all 0.15s ease;
+}
+.btn-delete:hover { transform: translateY(-2px); box-shadow: 0 5px 0 #991b1b, 0 5px 12px rgba(220, 38, 38, 0.4); }
+.btn-delete:active { transform: translateY(2px); box-shadow: 0 1px 0 #991b1b; }
+
+/* ========================================================= */
+/* SIDEBARS & NOVO QUIZ DISNEY                              */
+/* ========================================================= */
+.sidebar { width: 280px; display: flex; flex-direction: column; gap: 20px; }
+
+.info-card {
+  background: rgba(255, 255, 255, 0.08); padding: 22px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.info-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0, 210, 255, 0.25); border-color: rgba(0, 210, 255, 0.4); }
+.info-card h3 { margin: 0 0 12px 0; font-size: 1.25rem; background: linear-gradient(90deg, #ff007f, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px; }
+.info-card p { font-size: 0.9rem; line-height: 1.5; color: #e0e6ed; margin: 0; }
+
+/* QUIZ DISNEY - SIDEBAR ESQUERDA */
+.quiz-sidebar { width: 300px; display: flex; flex-direction: column; }
+
+.quiz-card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 22px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.quiz-card h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.4rem;
+  background: linear-gradient(90deg, #ffdf00, #ff007f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+.quiz-progress { font-size: 0.8rem; color: #00d2ff; text-align: center; margin: 0 0 8px 0; font-weight: bold; }
+.quiz-question { font-size: 0.95rem; font-weight: bold; line-height: 1.4; margin-bottom: 15px; color: #fff; text-align: center; }
+
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+
+.quiz-btn-option {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.quiz-btn-option:hover {
+  background: rgba(0, 210, 255, 0.3);
+  border-color: #00d2ff;
+  transform: translateX(4px);
+}
+
+.quiz-result { text-align: center; padding: 10px 0; }
+.quiz-result h4 { font-size: 1.3rem; margin: 0 0 10px 0; color: #ffdf00; }
+.quiz-result p { font-size: 1rem; margin-bottom: 15px; }
+
+.btn-quiz-restart {
+  background: linear-gradient(90deg, #ff007f, #7928ca);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
   font-weight: bold;
-  box-shadow: 0 3px 0 #991b1b;
-  transition: all 0.15s ease;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(255, 0, 127, 0.4);
 }
 
-.btn-delete:hover { 
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 #991b1b, 0 5px 12px rgba(220, 38, 38, 0.4);
+/* Efeito Visual de Erro (Chuva de Carinhas Chorando) */
+.crying-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 9998;
+  overflow: hidden;
 }
 
-.btn-delete:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #991b1b;
+.crying-emoji {
+  position: absolute;
+  font-size: 2.5rem;
+  top: -50px;
+  animation: fallEmoji 2s linear forwards;
+}
+
+@keyframes fallEmoji {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 1100px) {
+  .main-wrapper { flex-direction: column; align-items: center; }
+  .container { width: 100%; max-width: 850px; }
+  .quiz-sidebar, .sidebar { width: 100%; max-width: 850px; }
+}
+
+@media (max-width: 600px) {
+  .card { flex-direction: column; max-width: 380px; text-align: center; }
+  .card-info { text-align: center; }
+  .card ul { text-align: left; }
+  .disney-title { font-size: 4rem; }
+  .disney-arc { width: 260px; height: 130px; top: -50px; }
 }
