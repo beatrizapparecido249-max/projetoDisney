@@ -4,19 +4,23 @@
   font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif; 
 }
 
-body { 
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.2) 2px, transparent 2px),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.25) 3px, transparent 3px),
-    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.2) 2px, transparent 2px),
-    url('https://images.wallpapersden.com/image/download/disney-castle-art_bW1pa26UmZqaraWkpJRmZmdlrWZnZWU.jpg'),
-    radial-gradient(circle at center, rgba(26, 42, 108, 0.75), rgba(13, 27, 42, 0.85), rgba(0, 8, 20, 0.95));
+/* Reset & Estrutura */
+* { 
+  box-sizing: border-box; 
+  font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif; 
+}
 
-  background-position: 0 0, 0 0, 0 0, center center, center;
-  background-size: 100px 100px, 150px 150px, 120px 120px, cover, cover;
-  background-repeat: repeat, repeat, repeat, no-repeat, no-repeat;
+body { 
+  /* Imagem em alta definição com gradiente escuro para legibilidade dos cards */
+  background-image: 
+    radial-gradient(circle at center, rgba(13, 27, 42, 0.4), rgba(0, 8, 20, 0.75)),
+    url("./img/img2.png");
+
+  /* Ajustes para preencher 100% da tela sem repetir ou deixar bordas */
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
   background-attachment: fixed;
-  background-blend-mode: normal, normal, normal, overlay, normal;
   
   margin: 0; 
   padding: 40px 20px; 
@@ -401,4 +405,7 @@ hr {
   .card ul { text-align: left; }
   .disney-title { font-size: 4rem; }
   .disney-arc { width: 260px; height: 130px; top: -50px; }
+}
+#character-card {
+  transition: transform 0.1s ease-out;
 }

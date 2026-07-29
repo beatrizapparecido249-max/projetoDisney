@@ -242,7 +242,7 @@ const characterSummaries = {
   "minnie mouse": "A meiga e elegante companheira de Mickey Mouse, conhecida por seu estilo clássico e grande simpatia.",
   "stitch": "A Experiência 626, uma criatura alienígena geneticamente criada para causar caos que descobre o valor da família (Ohana).",
   "ariel": "Uma jovem sereia curiosa apaixonada pelo mundo humano que faz um acordo perigoso para viver na terra firme.",
-  "wood": "O corajoso e leal xerife brinquedo que faz de tudo para cuidar dos seus amigos e do seu dono.",
+  "woody": "O corajoso e leal xerife brinquedo que faz de tudo para cuidar dos seus amigos e do seu dono.",
   "buzz lightyear": "Um destemido patrulheiro espacial em brinquedo que acredita firmemente em proteger o universo 'ao infinito e além!'"
 };
 
@@ -404,3 +404,4 @@ cardElement.addEventListener('mousemove', (e) => {
 cardElement.addEventListener('mouseleave', () => {
   cardElement.style.transform = `rotateX(0deg) rotateY(0deg)`;
 });
+
